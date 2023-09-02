@@ -88,6 +88,35 @@ public:
     uint8_t ROR(); //rotate right
 
     /*jumps & calls*/
+    uint8_t JMP(); //jump
+    uint8_t JSR(); //jump to subroutine
+    uint8_t RTS(); //return from subroutine
+
+    /*branches*/
+    uint8_t BCC(); //branch if carry clear
+    uint8_t BCS(); //branch if carry set
+    uint8_t BEQ(); //branch if equal
+    uint8_t BMI(); //branch if minus
+    uint8_t BNE(); //branch if zero flag clear
+    uint8_t BPL(); //branch if negative flag clear
+    uint8_t BVC(); //branch if overflow flag clear
+    uint8_t BVS(); //branch if overflow flag set
+
+    /*status flag changes*/
+    uint8_t CLC(); //clear carry flag
+    uint8_t CLD(); //clear decimal mode flag
+    uint8_t CLI(); //clear interrupt disable flag
+    uint8_t CLV(); //clear overflow flag
+    uint8_t SEC(); //set carry flag
+    uint8_t SED(); //set decimal mode flag
+    uint8_t SEI(); //set interrupt disable flag
+
+    /*system functions*/
+    uint8_t BRK(); //force an interrupt
+    uint8_t NOP(); //no operation
+    uint8_t RTI(); //return from interrupt
+
+    void clock();
 
 private:
     Bus         *bus;
