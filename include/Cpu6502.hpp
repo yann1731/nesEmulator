@@ -117,6 +117,9 @@ public:
     uint8_t RTI(); //return from interrupt
 
     void clock();
+    void reset();
+    void irq();
+    void nmi();
 
 private:
     Bus         *bus;
