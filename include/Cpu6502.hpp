@@ -116,10 +116,22 @@ public:
     uint8_t NOP(); //no operation
     uint8_t RTI(); //return from interrupt
 
+    /*catchall for illegal opcodes*/
+    uint8_t XXX();
+
     void clock();
     void reset();
     void irq();
     void nmi();
+
+    uint8_t fetch();
+    uint8_t fetched;
+
+    uint16_t addrAbs;
+    uint16_t addrRel;
+    uint8_t opCode;
+
+    int cycles;
 
 private:
     Bus         *bus;
@@ -131,6 +143,9 @@ private:
     uint8_t     X; //index register x
     uint8_t     Y; //index register y
 
-    void read(uint16_t addr);
-    uint8_t write(uint16_t addr, uint8_t data);
+    uint8_t read(uint16_t addr);
+    void write(uint16_t addr, uint8_t data);
+
+    uint8_t GetFlags(PS f);
+    void SetFlags(PS f, bool v);
 };
