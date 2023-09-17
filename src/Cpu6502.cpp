@@ -2,7 +2,8 @@
 #include "../include/Bus.hpp"
 
 Cpu6502::Cpu6502(): bus(nullptr), status(0x00), PC(0x0000), SP(0x00),
-    A(0x00), X(0x00), Y(0x00)
+    A(0x00), X(0x00), Y(0x00), fetched(0x00), addrAbs(0x0000),
+     addrRel(0x0000), opCode(0x00), cycles(0)
 { }
 
 Cpu6502::~Cpu6502() { }

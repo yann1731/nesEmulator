@@ -1,5 +1,6 @@
 #pragma once
 #include "header.hpp"
+#include "../include/Instruction.hpp"
 
 class Bus;
 class Cpu6502 {
@@ -10,7 +11,7 @@ public:
     void connectBus(Bus *bus);
 
     /*processor status flags*/
-    enum PS {
+    enum CPUStatusFlags {
         C = (1 << 0), //Carry flag
         Z = (1 << 1), //Zero flag
         I = (1 << 2), //interrupt disable
@@ -146,6 +147,8 @@ private:
     uint8_t read(uint16_t addr);
     void write(uint16_t addr, uint8_t data);
 
-    uint8_t GetFlags(PS f);
-    void SetFlags(PS f, bool v);
+    uint8_t GetFlags(CPUStatusFlags f);
+    void SetFlags(CPUStatusFlags f, bool v);
+
+    std::vector<INSTRUCTION> lookup;
 };
