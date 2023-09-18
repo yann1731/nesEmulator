@@ -6,7 +6,7 @@ Cpu6502::Cpu6502(): bus(nullptr), status(0x00), PC(0x0000), SP(0x00),
      addrRel(0x0000), opCode(0x00), cycles(0)
 {
     using a = Cpu6502;
-    lookup = 
+    lookup = //Thanks to olc. Didn't have to write it all out
 	{
 		{ "BRK", &a::BRK, &a::IMM, 7 },{ "ORA", &a::ORA, &a::IIX, 6 },{ "???", &a::XXX, &a::IMP, 2 },{ "???", &a::XXX, &a::IMP, 8 },{ "???", &a::NOP, &a::IMP, 3 },{ "ORA", &a::ORA, &a::ZP0, 3 },{ "ASL", &a::ASL, &a::ZP0, 5 },{ "???", &a::XXX, &a::IMP, 5 },{ "PHP", &a::PHP, &a::IMP, 3 },{ "ORA", &a::ORA, &a::IMM, 2 },{ "ASL", &a::ASL, &a::IMP, 2 },{ "???", &a::XXX, &a::IMP, 2 },{ "???", &a::NOP, &a::IMP, 4 },{ "ORA", &a::ORA, &a::ABS, 4 },{ "ASL", &a::ASL, &a::ABS, 6 },{ "???", &a::XXX, &a::IMP, 6 },
 		{ "BPL", &a::BPL, &a::REL, 2 },{ "ORA", &a::ORA, &a::IIY, 5 },{ "???", &a::XXX, &a::IMP, 2 },{ "???", &a::XXX, &a::IMP, 8 },{ "???", &a::NOP, &a::IMP, 4 },{ "ORA", &a::ORA, &a::ZPX, 4 },{ "ASL", &a::ASL, &a::ZPX, 6 },{ "???", &a::XXX, &a::IMP, 6 },{ "CLC", &a::CLC, &a::IMP, 2 },{ "ORA", &a::ORA, &a::ABY, 4 },{ "???", &a::NOP, &a::IMP, 2 },{ "???", &a::XXX, &a::IMP, 7 },{ "???", &a::NOP, &a::IMP, 4 },{ "ORA", &a::ORA, &a::ABX, 4 },{ "ASL", &a::ASL, &a::ABX, 7 },{ "???", &a::XXX, &a::IMP, 7 },
@@ -46,7 +46,12 @@ uint8_t Cpu6502::GetFlags(CPUStatusFlags f) {
 }
 
 void Cpu6502::SetFlags(CPUStatusFlags f, bool v) {
-
+    if (v) {
+        status |= f;
+    }
+    else {
+        
+    }
 }
 
 uint8_t Cpu6502::IMP() {
@@ -330,7 +335,19 @@ uint8_t Cpu6502::XXX() {
 }
 
 void Cpu6502::clock() {
+    if (cycles == 0) {
+        opCode = read(PC);
+        PC++;
 
+        cycles = lookup[opCode].cycles;
+
+        uint8_t addCycle1 = (this->*lookup[opCode].operate)();
+
+        uint8_t addCycle2 = (this->*lookup[opCode].addrmode)();
+
+        cycles += (addCycle1 & addCycle2);
+    }
+    cycles--;
 }
 
 void Cpu6502::reset() {
