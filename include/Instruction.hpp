@@ -3,7 +3,6 @@
 
 class Cpu6502;
 struct INSTRUCTION {
-    INSTRUCTION();
     std::string name;
     uint8_t(Cpu6502::*operate)(void);
     uint8_t(Cpu6502::*addrmode)(void);
