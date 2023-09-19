@@ -42,7 +42,7 @@ void Cpu6502::connectBus(Bus *bus) {
 }
 
 uint8_t Cpu6502::GetFlags(CPUStatusFlags f) {
-
+    return ((status & f) > 0) ? 1 : 0;
 }
 
 void Cpu6502::SetFlags(CPUStatusFlags f, bool v) {
@@ -50,32 +50,41 @@ void Cpu6502::SetFlags(CPUStatusFlags f, bool v) {
         status |= f;
     }
     else {
-        
+        status &= ~f;
     }
 }
 
+/* Adressing modes */
+
 uint8_t Cpu6502::IMP() {
-
-}
-
-uint8_t Cpu6502::ACC() {
-
+	fetched = A;
+	return 0;
 }
 
 uint8_t Cpu6502::IMM() {
-
+    addrAbs = PC++;
+	return 0;
 }
 
 uint8_t Cpu6502::ZP0() {
-
+    addrAbs = read(PC);
+    PC++;
+    addrAbs &= 0x00FF;
+    return 0;
 }
 
 uint8_t Cpu6502::ZPX() {
-
+    addrAbs = (read(PC) + X);
+    PC++;
+    addrAbs &= 0x00FF;
+    return 0;
 }
 
 uint8_t Cpu6502::ZPY() {
-
+    addrAbs = (read(PC) + Y);
+    PC++;
+    addrAbs &= 0x00FF;
+    return 0;
 }
 
 uint8_t Cpu6502::REL() {
@@ -83,7 +92,13 @@ uint8_t Cpu6502::REL() {
 }
 
 uint8_t Cpu6502::ABS() {
+    uint16_t lo = read(PC);
+    PC++;
+    uint16_t hi = read(PC);
 
+    addrAbs = (hi << 8) | lo;
+
+    return 0;
 }
 
 uint8_t Cpu6502::ABX() {
@@ -105,6 +120,8 @@ uint8_t Cpu6502::IIX() {
 uint8_t Cpu6502::IIY() {
     
 }
+
+/* Cpu instructions */
 
 uint8_t Cpu6502::LDA() {
     

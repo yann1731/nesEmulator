@@ -24,7 +24,6 @@ public:
 
     /*processor addressing modes*/
     uint8_t IMP(); //implied
-    uint8_t ACC(); //accumulator
     uint8_t IMM(); //immediate
     uint8_t ZP0(); //zero page 
     uint8_t ZPX(); //zero page x
