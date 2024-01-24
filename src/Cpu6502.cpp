@@ -1,5 +1,7 @@
 #include "../include/Cpu6502.hpp"
 #include "../include/Bus.hpp"
+#include <cstdint>
+#include <sys/types.h>
 
 Cpu6502::Cpu6502(): bus(nullptr), status(0x00), PC(0x0000), SP(0x00),
     A(0x00), X(0x00), Y(0x00), fetched(0x00), addrAbs(0x0000),
@@ -100,6 +102,7 @@ uint8_t Cpu6502::ABS() {
     uint16_t lo = read(PC);
     PC++;
     uint16_t hi = read(PC);
+    PC++;
 
     addrAbs = (hi << 8) | lo;
 
@@ -107,15 +110,50 @@ uint8_t Cpu6502::ABS() {
 }
 
 uint8_t Cpu6502::ABX() {
+    uint16_t lo = read(PC);
+    PC++;
+    uint16_t hi = read(PC);
+    PC++;
 
+    addrAbs = (hi << 8) | lo;
+    addrAbs += X;
+
+    if ((addrAbs & 0xFF00) != (hi << 8))
+        return 1;
+    else
+        return 0;
 }
 
 uint8_t Cpu6502::ABY() {
-    
+    uint16_t lo = read(PC);
+    PC++;
+    uint16_t hi = read(PC);
+    PC++;
+
+    addrAbs = (hi << 8) | lo;
+    addrAbs += Y;
+
+    if ((addrAbs & 0xFF00) != (hi << 8))
+        return 1;
+    else
+        return 0;
 }
 
 uint8_t Cpu6502::IND() {
-    
+    uint16_t ptrLo = read(PC);
+    PC++;
+    uint16_t ptrHi = read(PC);
+    PC++;
+
+    uint16_t ptr = (ptrHi << 8) | ptrLo;
+
+    if (ptrLo == 0x00FF) {
+        addrAbs = (read(0x00FF) << 8) | read(ptr + 0);
+    } else {
+        addrAbs = (read(ptr + 1) << 8) | read(ptr + 0);
+    }
+
+    return 0;
 }
 
 uint8_t Cpu6502::IIX() {
