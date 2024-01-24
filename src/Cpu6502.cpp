@@ -88,7 +88,12 @@ uint8_t Cpu6502::ZPY() {
 }
 
 uint8_t Cpu6502::REL() {
-
+    addrRel = read(PC);
+    PC++;
+    if (addrRel & 0x80) {
+        addrRel |= 0xFF00;
+    }
+    return 0;
 }
 
 uint8_t Cpu6502::ABS() {
