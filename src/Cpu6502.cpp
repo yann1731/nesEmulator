@@ -69,29 +69,25 @@ uint8_t Cpu6502::IMM() {
 }
 
 uint8_t Cpu6502::ZP0() {
-    addrAbs = read(PC);
-    PC++;
+    addrAbs = read(PC++);
     addrAbs &= 0x00FF;
     return 0;
 }
 
 uint8_t Cpu6502::ZPX() {
-    addrAbs = (read(PC) + X);
-    PC++;
+    addrAbs = (read(PC++) + X);
     addrAbs &= 0x00FF;
     return 0;
 }
 
 uint8_t Cpu6502::ZPY() {
-    addrAbs = (read(PC) + Y);
-    PC++;
+    addrAbs = (read(PC++) + Y);
     addrAbs &= 0x00FF;
     return 0;
 }
 
 uint8_t Cpu6502::REL() {
-    addrRel = read(PC);
-    PC++;
+    addrRel = read(PC++);
     if (addrRel & 0x80) {
         addrRel |= 0xFF00;
     }
@@ -99,10 +95,8 @@ uint8_t Cpu6502::REL() {
 }
 
 uint8_t Cpu6502::ABS() {
-    uint16_t lo = read(PC);
-    PC++;
-    uint16_t hi = read(PC);
-    PC++;
+    uint16_t lo = read(PC++);
+    uint16_t hi = read(PC++);
 
     addrAbs = (hi << 8) | lo;
 
@@ -110,10 +104,8 @@ uint8_t Cpu6502::ABS() {
 }
 
 uint8_t Cpu6502::ABX() {
-    uint16_t lo = read(PC);
-    PC++;
-    uint16_t hi = read(PC);
-    PC++;
+    uint16_t lo = read(PC++);
+    uint16_t hi = read(PC++);
 
     addrAbs = (hi << 8) | lo;
     addrAbs += X;
@@ -125,10 +117,8 @@ uint8_t Cpu6502::ABX() {
 }
 
 uint8_t Cpu6502::ABY() {
-    uint16_t lo = read(PC);
-    PC++;
-    uint16_t hi = read(PC);
-    PC++;
+    uint16_t lo = read(PC++);
+    uint16_t hi = read(PC++);
 
     addrAbs = (hi << 8) | lo;
     addrAbs += Y;
@@ -140,10 +130,8 @@ uint8_t Cpu6502::ABY() {
 }
 
 uint8_t Cpu6502::IND() {
-    uint16_t ptrLo = read(PC);
-    PC++;
-    uint16_t ptrHi = read(PC);
-    PC++;
+    uint16_t ptrLo = read(PC++);
+    uint16_t ptrHi = read(PC++);
 
     uint16_t ptr = (ptrHi << 8) | ptrLo;
 
@@ -157,7 +145,8 @@ uint8_t Cpu6502::IND() {
 }
 
 uint8_t Cpu6502::IIX() {
-    
+    uint16_t t = read(PC++);
+
 }
 
 uint8_t Cpu6502::IIY() {
