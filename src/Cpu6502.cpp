@@ -147,6 +147,12 @@ uint8_t Cpu6502::IND() {
 uint8_t Cpu6502::IIX() {
     uint16_t t = read(PC++);
 
+    uint16_t lo = read((uint16_t) (t + (uint16_t)X) & 0x00FF);
+    uint16_t hi = read((uint16_t)(t + (uint16_t)X + 1) & 0x00FF);
+
+    addrAbs = (hi << 8) | lo;
+
+    return 0;
 }
 
 uint8_t Cpu6502::IIY() {
