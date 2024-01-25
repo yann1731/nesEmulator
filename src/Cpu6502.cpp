@@ -156,7 +156,18 @@ uint8_t Cpu6502::IIX() {
 }
 
 uint8_t Cpu6502::IIY() {
-    
+    uint16_t t = read(PC++);
+
+    uint16_t lo = read(t & 0x00FF);
+    uint16_t hi = read((t + 1) & 0x00FF);
+
+    addrAbs = (hi << 8) | lo;
+    addrAbs += Y;
+
+    if ((addrAbs & 0x00FF) != (hi << 8))
+        return 1;
+    else
+        return 0;
 }
 
 /* Cpu instructions */
