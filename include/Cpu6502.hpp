@@ -18,7 +18,7 @@ public:
         D = (1 << 3), //Decimal mode
         B = (1 << 4), //Break command
         U = (1 << 5), //Unused
-        O = (1 << 6), //Overflow flag
+        V = (1 << 6), //Overflow flag
         N = (1 << 7), //Negative
     };
 

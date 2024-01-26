@@ -237,7 +237,11 @@ uint8_t Cpu6502::PLP() {
 }
 
 uint8_t Cpu6502::AND() {
-    
+    fetch();
+    A = A & fetched;
+    SetFlags(Z, A == 0x00);
+    SetFlags(N, A & 0x80);
+    return 1;
 }
 
 uint8_t Cpu6502::EOR() {
@@ -329,47 +333,103 @@ uint8_t Cpu6502::BCC() {
 }
 
 uint8_t Cpu6502::BCS() {
-    
+    if (GetFlags(C) == 1) {
+        cycles++;
+        addrAbs = PC + addrRel;
+        if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
+            cycles++;
+        }
+        PC = addrAbs;
+    }
+    return 0;
 }
 
 uint8_t Cpu6502::BEQ() {
-    
+    if (GetFlags(Z) == 1) {
+        cycles++;
+        addrAbs = PC + addrRel;
+        if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
+            cycles++;
+        }
+        PC = addrAbs;
+    }
+    return 0;
 }
 
 uint8_t Cpu6502::BMI() {
-    
+    if (GetFlags(N) == 1) {
+        cycles++;
+        addrAbs = PC + addrRel;
+        if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
+            cycles++;
+        }
+        PC = addrAbs;
+    }
+    return 0;
 }
 
 uint8_t Cpu6502::BNE() {
-    
+    if (!(GetFlags(Z) == 1)) {
+        cycles++;
+        addrAbs = PC + addrRel;
+        if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
+            cycles++;
+        }
+        PC = addrAbs;
+    }
+    return 0;
 }
 
 uint8_t Cpu6502::BPL() {
-    
+    if (!(GetFlags(N) == 1)) {
+        cycles++;
+        addrAbs = PC + addrRel;
+        if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
+            cycles++;
+        }
+        PC = addrAbs;
+    }
+    return 0;
 }
 
 uint8_t Cpu6502::BVC() {
-    
+    if (!(GetFlags(V) == 1)) {
+        cycles++;
+        addrAbs = PC + addrRel;
+        if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
+            cycles++;
+        }
+        PC = addrAbs;
+    }
+    return 0;
 }
 
 uint8_t Cpu6502::BVS() {
-    
+    if (GetFlags(V) == 1) {
+        cycles++;
+        addrAbs = PC + addrRel;
+        if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
+            cycles++;
+        }
+        PC = addrAbs;
+    }
+    return 0;
 }
 
 uint8_t Cpu6502::CLC() {
-    
+    SetFlags(C, false);
 }
 
 uint8_t Cpu6502::CLD() {
-    
+    SetFlags(D, false);
 }
 
 uint8_t Cpu6502::CLI() {
-    
+    SetFlags(I, false);
 }
 
 uint8_t Cpu6502::CLV() {
-    
+    SetFlags(V, false);
 }
 
 uint8_t Cpu6502::SEC() {
@@ -429,5 +489,7 @@ void Cpu6502::nmi() {
 }
 
 uint8_t Cpu6502::fetch() {
-    
+    if (!(lookup[opCode].addrmode == &Cpu6502::IMP))
+        fetched = read(addrAbs);
+    return fetched;
 }
