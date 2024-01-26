@@ -329,7 +329,15 @@ uint8_t Cpu6502::RTS() {
 }
 
 uint8_t Cpu6502::BCC() {
-    
+    if (!(GetFlags(C) == 1)) {
+        cycles++;
+        addrAbs = PC + addrRel;
+        if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
+            cycles++;
+        }
+        PC = addrAbs;
+    }
+    return 0;
 }
 
 uint8_t Cpu6502::BCS() {
