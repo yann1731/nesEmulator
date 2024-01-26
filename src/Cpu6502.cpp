@@ -173,15 +173,24 @@ uint8_t Cpu6502::IIY() {
 /* Cpu instructions */
 
 uint8_t Cpu6502::LDA() {
-    
+    fetch();
+    A = fetched;
+    SetFlags(Z, A == 0x00);
+    SetFlags(N, A & 0x80);
 }
 
 uint8_t Cpu6502::LDX() {
-    
+    fetch();
+    X = fetched;
+    SetFlags(Z, X == 0x00);
+    SetFlags(N, X & 0x80);
 }
 
 uint8_t Cpu6502::LDY() {
-    
+    fetch();
+    Y = fetched;
+    SetFlags(Z, Y == 0x00);
+    SetFlags(N, Y & 0x80);
 }
 
 uint8_t Cpu6502::STA() {
@@ -441,15 +450,15 @@ uint8_t Cpu6502::CLV() {
 }
 
 uint8_t Cpu6502::SEC() {
-    
+    SetFlags(C, true);
 }
 
 uint8_t Cpu6502::SED() {
-    
+    SetFlags(D, true);
 }
 
 uint8_t Cpu6502::SEI() {
-    
+    SetFlags(I, true);
 }
 
 uint8_t Cpu6502::BRK() {
