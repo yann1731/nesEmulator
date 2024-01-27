@@ -177,6 +177,7 @@ uint8_t Cpu6502::LDA() {
     A = fetched;
     SetFlags(Z, A == 0x00);
     SetFlags(N, A & 0x80);
+    return 1;
 }
 
 uint8_t Cpu6502::LDX() {
@@ -184,6 +185,7 @@ uint8_t Cpu6502::LDX() {
     X = fetched;
     SetFlags(Z, X == 0x00);
     SetFlags(N, X & 0x80);
+    return 1;
 }
 
 uint8_t Cpu6502::LDY() {
@@ -191,30 +193,43 @@ uint8_t Cpu6502::LDY() {
     Y = fetched;
     SetFlags(Z, Y == 0x00);
     SetFlags(N, Y & 0x80);
+    return 1;
 }
 
 uint8_t Cpu6502::STA() {
-    
+    write(addrAbs, A);
+    return 0;
 }
 
 uint8_t Cpu6502::STX() {
-    
+    write(addrAbs, X);
+    return 0;
 }
 
 uint8_t Cpu6502::STY() {
-    
+    write(addrAbs, Y);
+    return 0;
 }
 
 uint8_t Cpu6502::TAX() {
-    
+    X = A;
+    SetFlags(Z, X == 0x00);
+    SetFlags(N, X == 0x80);
+    return 0;
 }
 
 uint8_t Cpu6502::TAY() {
-    
+    Y = A;
+    SetFlags(Z, Y == 0x00);
+    SetFlags(N, Y == 0x80);
+    return 0;
 }
 
 uint8_t Cpu6502::TXA() {
-    
+    A = X;
+    SetFlags(Z, A == 0x00);
+    SetFlags(N, A == 0x80);
+    return 0;
 }
 
 uint8_t Cpu6502::TYA() {
