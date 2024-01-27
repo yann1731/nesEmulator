@@ -233,7 +233,10 @@ uint8_t Cpu6502::TXA() {
 }
 
 uint8_t Cpu6502::TYA() {
-    
+    A = Y;
+    SetFlags(Z, A == 0x00);
+    SetFlags(N, A == 0x80);
+    return 0;
 }
 
 uint8_t Cpu6502::TSX() {
