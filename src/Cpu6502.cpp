@@ -246,13 +246,12 @@ uint8_t Cpu6502::TSX() {
     return 0;
 }
 
-uint8_t Cpu6502::TXS() {
-    SP = X;
-    return 0;
+uint8_t Cpu6502::TXS() { //Don't think that's good
+    
 }
 
 uint8_t Cpu6502::PHA() {
-    
+
 }
 
 uint8_t Cpu6502::PHP() {
@@ -457,30 +456,37 @@ uint8_t Cpu6502::BVS() {
 
 uint8_t Cpu6502::CLC() {
     SetFlags(C, false);
+    return 0;
 }
 
 uint8_t Cpu6502::CLD() {
     SetFlags(D, false);
+    return 0;
 }
 
 uint8_t Cpu6502::CLI() {
     SetFlags(I, false);
+    return 0;
 }
 
 uint8_t Cpu6502::CLV() {
     SetFlags(V, false);
+    return 0;
 }
 
 uint8_t Cpu6502::SEC() {
     SetFlags(C, true);
+    return 0;
 }
 
 uint8_t Cpu6502::SED() {
     SetFlags(D, true);
+    return 0;
 }
 
 uint8_t Cpu6502::SEI() {
     SetFlags(I, true);
+    return 0;
 }
 
 uint8_t Cpu6502::BRK() {
