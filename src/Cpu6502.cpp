@@ -29,6 +29,28 @@ Cpu6502::Cpu6502(): bus(nullptr), status(0x00), PC(0x0000), SP(0x00),
 	};
 }
 
+void Cpu6502::clock() {
+    if (cycles == 0) {
+        opCode = read(PC);
+        PC++;
+
+        cycles = lookup[opCode].cycles;
+
+        uint8_t addCycle1 = (this->*lookup[opCode].operate)();
+
+        uint8_t addCycle2 = (this->*lookup[opCode].addrmode)();
+
+        cycles += (addCycle1 & addCycle2);
+    }
+    cycles--;
+}
+
+uint8_t Cpu6502::fetch() {
+    if (!(lookup[opCode].addrmode == &Cpu6502::IMP))
+        fetched = read(addrAbs);
+    return fetched;
+}
+
 Cpu6502::~Cpu6502() { }
 
 uint8_t Cpu6502::read(uint16_t addr) {
@@ -505,22 +527,6 @@ uint8_t Cpu6502::XXX() {
     
 }
 
-void Cpu6502::clock() {
-    if (cycles == 0) {
-        opCode = read(PC);
-        PC++;
-
-        cycles = lookup[opCode].cycles;
-
-        uint8_t addCycle1 = (this->*lookup[opCode].operate)();
-
-        uint8_t addCycle2 = (this->*lookup[opCode].addrmode)();
-
-        cycles += (addCycle1 & addCycle2);
-    }
-    cycles--;
-}
-
 void Cpu6502::reset() {
 
 }
@@ -531,10 +537,4 @@ void Cpu6502::irq() {
 
 void Cpu6502::nmi() {
 
-}
-
-uint8_t Cpu6502::fetch() {
-    if (!(lookup[opCode].addrmode == &Cpu6502::IMP))
-        fetched = read(addrAbs);
-    return fetched;
 }
