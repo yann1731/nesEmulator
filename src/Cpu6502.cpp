@@ -268,23 +268,23 @@ uint8_t Cpu6502::TSX() {
     return 0;
 }
 
-uint8_t Cpu6502::TXS() { //Don't think that's good
+uint8_t Cpu6502::TXS() { //Transfer stack pointer to X
     
 }
 
-uint8_t Cpu6502::PHA() {
+uint8_t Cpu6502::PHA() { //Push accumulator to stack
 
 }
 
-uint8_t Cpu6502::PHP() {
+uint8_t Cpu6502::PHP() { //Push processor status to stack
     
 }
 
-uint8_t Cpu6502::PLA() {
+uint8_t Cpu6502::PLA() { //Pull accumulator to stack
     
 }
 
-uint8_t Cpu6502::PLP() {
+uint8_t Cpu6502::PLP() { //Pull processor status to stack
     
 }
 
@@ -296,87 +296,87 @@ uint8_t Cpu6502::AND() {
     return 1;
 }
 
-uint8_t Cpu6502::EOR() {
+uint8_t Cpu6502::EOR() { //Exclusive OR
     
 }
 
-uint8_t Cpu6502::ORA() {
+uint8_t Cpu6502::ORA() { //Logical inclusive OR
     
 }
 
-uint8_t Cpu6502::BIT() {
+uint8_t Cpu6502::BIT() { //Bit test
     
 }
 
-uint8_t Cpu6502::ADC() {
+uint8_t Cpu6502::ADC() { //Add with carry
     
 }
 
-uint8_t Cpu6502::SBC() {
+uint8_t Cpu6502::SBC() { //Subtract with carry
     
 }
 
-uint8_t Cpu6502::CMP() {
+uint8_t Cpu6502::CMP() { //Compare accumulator
     
 }
 
-uint8_t Cpu6502::CPX() {
+uint8_t Cpu6502::CPX() { //Compare X register
     
 }
 
-uint8_t Cpu6502::CPY() {
+uint8_t Cpu6502::CPY() { //Compare Y register
     
 }
 
-uint8_t Cpu6502::INC() {
+uint8_t Cpu6502::INC() { //Increment a memory location
     
 }
 
-uint8_t Cpu6502::INX() {
+uint8_t Cpu6502::INX() { //Increment the X register
     
 }
 
-uint8_t Cpu6502::INY() {
+uint8_t Cpu6502::INY() { //Increment the Y register
     
 }
 
-uint8_t Cpu6502::DEC() {
+uint8_t Cpu6502::DEC() { //Decrement a memory location
     
 }
 
-uint8_t Cpu6502::DEX() {
+uint8_t Cpu6502::DEX() { //Decrement the X register
     
 }
 
-uint8_t Cpu6502::DEY() {
+uint8_t Cpu6502::DEY() { //Decrement the Y register
     
 }
 
-uint8_t Cpu6502::ASL() {
+uint8_t Cpu6502::ASL() { //Arithmetic shift left
     
 }
 
-uint8_t Cpu6502::LSR() {
+uint8_t Cpu6502::LSR() { //Logical shift right
     
 }
 
-uint8_t Cpu6502::ROL() {
+uint8_t Cpu6502::ROL() { //Rotate left
     
 }
 
-uint8_t Cpu6502::ROR() {
+uint8_t Cpu6502::ROR() { //Rotate right
     
 }
 
-uint8_t Cpu6502::JMP() {
+uint8_t Cpu6502::JMP() { //Jump to another location
     
 }
 
-uint8_t Cpu6502::JSR() {
+uint8_t Cpu6502::JSR() { //Jump to a subroutine
     
 }
 
-uint8_t Cpu6502::RTS() {
+uint8_t Cpu6502::RTS() { //Return from subroutine
     
 }
 
