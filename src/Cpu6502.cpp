@@ -328,7 +328,13 @@ uint8_t Cpu6502::ORA() { //Logical inclusive OR
 }
 
 uint8_t Cpu6502::BIT() { //Bit test
-    
+    fetch();
+    uint16_t temp = 0x0000; 
+    temp = A & fetched;
+    setFlags(Z, (temp & 0x00FF) == 0x00);
+    setFlags(N, fetched & (1 << 7));
+    setFlags(V, fetched & (1 << 6));
+    return 0;
 }
 
 uint8_t Cpu6502::ADC() { //Add with carry
