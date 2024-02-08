@@ -237,35 +237,35 @@ uint8_t Cpu6502::STY() {
 uint8_t Cpu6502::TAX() {
     X = A;
     setFlags(Z, X == 0x00);
-    setFlags(N, X == 0x80);
+    setFlags(N, X & 0x80);
     return 0;
 }
 
 uint8_t Cpu6502::TAY() {
     Y = A;
     setFlags(Z, Y == 0x00);
-    setFlags(N, Y == 0x80);
+    setFlags(N, Y & 0x80);
     return 0;
 }
 
 uint8_t Cpu6502::TXA() {
     A = X;
     setFlags(Z, A == 0x00);
-    setFlags(N, A == 0x80);
+    setFlags(N, A & 0x80);
     return 0;
 }
 
 uint8_t Cpu6502::TYA() {
     A = Y;
     setFlags(Z, A == 0x00);
-    setFlags(N, A == 0x80);
+    setFlags(N, A & 0x80);
     return 0;
 }
 
 uint8_t Cpu6502::TSX() { //Transfer stack pointer to X
     X = SP;
     setFlags(Z, X == 0x00);
-    setFlags(N, X == 0x80);
+    setFlags(N, X & 0x80);
     return 0;
 }
 
@@ -275,19 +275,32 @@ uint8_t Cpu6502::TXS() { //Transfer X to stack pointer
 }
 
 uint8_t Cpu6502::PHA() { //Push accumulator to stack
-    
+    write(0x0100 + SP, A);
+    SP--;
+    return 0;   
 }
 
 uint8_t Cpu6502::PHP() { //Push processor status to stack
-    
+    write(0x0100 + SP, status | B | U);
+    setFlags(B, 0);
+    setFlags(U, 0);
+    SP--;
+    return 0;
 }
 
 uint8_t Cpu6502::PLA() { //Pulls an 8 bit value from the stack and into the accumulator
-    
+    SP++;
+    A = read(0x0100 + SP);
+    setFlags(Z, A == 0x00);
+    setFlags(N, A & 0x80);
+    return 0;
 }
 
 uint8_t Cpu6502::PLP() { //Pulls an 8 bit value from the stack and into the processor flags
-    
+    SP++;
+    status = read(0x0100 + SP);
+    setFlags(U, 1);
+    return 0;
 }
 
 uint8_t Cpu6502::AND() { //Logical AND
