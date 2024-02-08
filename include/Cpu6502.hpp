@@ -1,6 +1,6 @@
 #pragma once
 #include "header.hpp"
-#include "../include/Instruction.hpp"
+#include "Instruction.hpp"
 
 class Bus;
 class Cpu6502 {
@@ -146,8 +146,8 @@ private:
     uint8_t read(uint16_t addr);
     void write(uint16_t addr, uint8_t data);
 
-    uint8_t GetFlags(CPUStatusFlags f);
-    void SetFlags(CPUStatusFlags f, bool v);
+    uint8_t getFlags(CPUStatusFlags f);
+    void setFlags(CPUStatusFlags f, bool v);
 
     std::vector<INSTRUCTION> lookup;
 };

@@ -1,6 +1,7 @@
 #include "../include/Cpu6502.hpp"
 #include "../include/Bus.hpp"
 #include <cstdint>
+#include <setjmp.h>
 #include <sys/types.h>
 
 Cpu6502::Cpu6502(): bus(nullptr), status(0x00), PC(0x0000), SP(0x00),
@@ -65,11 +66,11 @@ void Cpu6502::connectBus(Bus *bus) {
     this->bus = bus;
 }
 
-uint8_t Cpu6502::GetFlags(CPUStatusFlags f) {
+uint8_t Cpu6502::getFlags(CPUStatusFlags f) {
     return ((status & f) > 0) ? 1 : 0;
 }
 
-void Cpu6502::SetFlags(CPUStatusFlags f, bool v) {
+void Cpu6502::setFlags(CPUStatusFlags f, bool v) {
     if (v) {
         status |= f;
     }
@@ -197,24 +198,24 @@ uint8_t Cpu6502::IIY() {
 uint8_t Cpu6502::LDA() {
     fetch();
     A = fetched;
-    SetFlags(Z, A == 0x00);
-    SetFlags(N, A & 0x80);
+    setFlags(Z, A == 0x00);
+    setFlags(N, A & 0x80);
     return 1;
 }
 
 uint8_t Cpu6502::LDX() {
     fetch();
     X = fetched;
-    SetFlags(Z, X == 0x00);
-    SetFlags(N, X & 0x80);
+    setFlags(Z, X == 0x00);
+    setFlags(N, X & 0x80);
     return 1;
 }
 
 uint8_t Cpu6502::LDY() {
     fetch();
     Y = fetched;
-    SetFlags(Z, Y == 0x00);
-    SetFlags(N, Y & 0x80);
+    setFlags(Z, Y == 0x00);
+    setFlags(N, Y & 0x80);
     return 1;
 }
 
@@ -235,73 +236,82 @@ uint8_t Cpu6502::STY() {
 
 uint8_t Cpu6502::TAX() {
     X = A;
-    SetFlags(Z, X == 0x00);
-    SetFlags(N, X == 0x80);
+    setFlags(Z, X == 0x00);
+    setFlags(N, X == 0x80);
     return 0;
 }
 
 uint8_t Cpu6502::TAY() {
     Y = A;
-    SetFlags(Z, Y == 0x00);
-    SetFlags(N, Y == 0x80);
+    setFlags(Z, Y == 0x00);
+    setFlags(N, Y == 0x80);
     return 0;
 }
 
 uint8_t Cpu6502::TXA() {
     A = X;
-    SetFlags(Z, A == 0x00);
-    SetFlags(N, A == 0x80);
+    setFlags(Z, A == 0x00);
+    setFlags(N, A == 0x80);
     return 0;
 }
 
 uint8_t Cpu6502::TYA() {
     A = Y;
-    SetFlags(Z, A == 0x00);
-    SetFlags(N, A == 0x80);
+    setFlags(Z, A == 0x00);
+    setFlags(N, A == 0x80);
     return 0;
 }
 
-uint8_t Cpu6502::TSX() {
+uint8_t Cpu6502::TSX() { //Transfer stack pointer to X
     X = SP;
-    SetFlags(Z, X == 0x00);
-    SetFlags(N, X == 0x80);
+    setFlags(Z, X == 0x00);
+    setFlags(N, X == 0x80);
     return 0;
 }
 
-uint8_t Cpu6502::TXS() { //Transfer stack pointer to X
-    
+uint8_t Cpu6502::TXS() { //Transfer X to stack pointer
+    SP = X;
+    return 0;
 }
 
 uint8_t Cpu6502::PHA() { //Push accumulator to stack
-
+    
 }
 
 uint8_t Cpu6502::PHP() { //Push processor status to stack
     
 }
 
-uint8_t Cpu6502::PLA() { //Pull accumulator to stack
+uint8_t Cpu6502::PLA() { //Pulls an 8 bit value from the stack and into the accumulator
     
 }
 
-uint8_t Cpu6502::PLP() { //Pull processor status to stack
+uint8_t Cpu6502::PLP() { //Pulls an 8 bit value from the stack and into the processor flags
     
 }
 
-uint8_t Cpu6502::AND() {
+uint8_t Cpu6502::AND() { //Logical AND
     fetch();
     A = A & fetched;
-    SetFlags(Z, A == 0x00);
-    SetFlags(N, A & 0x80);
+    setFlags(Z, A == 0x00);
+    setFlags(N, A & 0x80);
     return 1;
 }
 
 uint8_t Cpu6502::EOR() { //Exclusive OR
-    
+    fetch();
+    A = A ^ fetched;
+    setFlags(Z, A == 0x00);
+    setFlags(N, A & 0x80);
+    return 1;
 }
 
 uint8_t Cpu6502::ORA() { //Logical inclusive OR
-    
+    fetch();
+    A = A | fetched;
+    setFlags(Z, A == 0x00);
+    setFlags(N, A & 0x80);
+    return 1;
 }
 
 uint8_t Cpu6502::BIT() { //Bit test
@@ -381,7 +391,7 @@ uint8_t Cpu6502::RTS() { //Return from subroutine
 }
 
 uint8_t Cpu6502::BCC() {
-    if (!(GetFlags(C) == 1)) {
+    if (!(getFlags(C) == 1)) {
         cycles++;
         addrAbs = PC + addrRel;
         if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
@@ -393,7 +403,7 @@ uint8_t Cpu6502::BCC() {
 }
 
 uint8_t Cpu6502::BCS() {
-    if (GetFlags(C) == 1) {
+    if (getFlags(C) == 1) {
         cycles++;
         addrAbs = PC + addrRel;
         if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
@@ -405,7 +415,7 @@ uint8_t Cpu6502::BCS() {
 }
 
 uint8_t Cpu6502::BEQ() {
-    if (GetFlags(Z) == 1) {
+    if (getFlags(Z) == 1) {
         cycles++;
         addrAbs = PC + addrRel;
         if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
@@ -417,7 +427,7 @@ uint8_t Cpu6502::BEQ() {
 }
 
 uint8_t Cpu6502::BMI() {
-    if (GetFlags(N) == 1) {
+    if (getFlags(N) == 1) {
         cycles++;
         addrAbs = PC + addrRel;
         if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
@@ -429,7 +439,7 @@ uint8_t Cpu6502::BMI() {
 }
 
 uint8_t Cpu6502::BNE() {
-    if (!(GetFlags(Z) == 1)) {
+    if (!(getFlags(Z) == 1)) {
         cycles++;
         addrAbs = PC + addrRel;
         if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
@@ -441,7 +451,7 @@ uint8_t Cpu6502::BNE() {
 }
 
 uint8_t Cpu6502::BPL() {
-    if (!(GetFlags(N) == 1)) {
+    if (!(getFlags(N) == 1)) {
         cycles++;
         addrAbs = PC + addrRel;
         if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
@@ -453,7 +463,7 @@ uint8_t Cpu6502::BPL() {
 }
 
 uint8_t Cpu6502::BVC() {
-    if (!(GetFlags(V) == 1)) {
+    if (!(getFlags(V) == 1)) {
         cycles++;
         addrAbs = PC + addrRel;
         if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
@@ -465,7 +475,7 @@ uint8_t Cpu6502::BVC() {
 }
 
 uint8_t Cpu6502::BVS() {
-    if (GetFlags(V) == 1) {
+    if (getFlags(V) == 1) {
         cycles++;
         addrAbs = PC + addrRel;
         if ((addrAbs & 0xFF00) != (PC & 0xFF00)) {
@@ -477,37 +487,37 @@ uint8_t Cpu6502::BVS() {
 }
 
 uint8_t Cpu6502::CLC() {
-    SetFlags(C, false);
+    setFlags(C, false);
     return 0;
 }
 
 uint8_t Cpu6502::CLD() {
-    SetFlags(D, false);
+    setFlags(D, false);
     return 0;
 }
 
 uint8_t Cpu6502::CLI() {
-    SetFlags(I, false);
+    setFlags(I, false);
     return 0;
 }
 
 uint8_t Cpu6502::CLV() {
-    SetFlags(V, false);
+    setFlags(V, false);
     return 0;
 }
 
 uint8_t Cpu6502::SEC() {
-    SetFlags(C, true);
+    setFlags(C, true);
     return 0;
 }
 
 uint8_t Cpu6502::SED() {
-    SetFlags(D, true);
+    setFlags(D, true);
     return 0;
 }
 
 uint8_t Cpu6502::SEI() {
-    SetFlags(I, true);
+    setFlags(I, true);
     return 0;
 }
 
