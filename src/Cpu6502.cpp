@@ -338,7 +338,13 @@ uint8_t Cpu6502::BIT() { //Bit test
 }
 
 uint8_t Cpu6502::ADC() { //Add with carry
-    
+    fetch();
+    uint16_t temp = 0x0000;
+    temp = (uint16_t) A + (uint16_t) fetched + (uint16_t) getFlags(C);
+
+    setFlags(C, temp > 255);
+    setFlags(Z, (temp & 0x00FF) == 0);
+    setFlags(V, (~((uint16_t))))
 }
 
 uint8_t Cpu6502::SBC() { //Subtract with carry
