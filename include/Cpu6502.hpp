@@ -137,11 +137,11 @@ private:
     Bus         *bus;
 
     uint8_t     status; //processor status
-    uint16_t    PC; //program counter
-    uint8_t     SP; //stack pointer
-    uint8_t     A; //accumulator
-    uint8_t     X; //index register x
-    uint8_t     Y; //index register y
+    uint16_t    pc_; //program counter
+    uint8_t     sp_; //stack pointer
+    uint8_t     a_; //accumulator
+    uint8_t     x_; //index register x
+    uint8_t     y_; //index register y
 
     uint8_t read(uint16_t addr);
     void write(uint16_t addr, uint8_t data);
