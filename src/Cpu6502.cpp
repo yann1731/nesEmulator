@@ -359,8 +359,10 @@ uint8_t Cpu6502::SBC() { //Subtract with carry
     temp = (uint16_t) a_ + value + (uint16_t) getFlags(C);
     setFlags(C, temp & 0xFF00);
     setFlags(Z, (temp & 0x00FF) == 0);
-    setFlags(V, (temp ^ (uint16_t) a_) & );
+    setFlags(V, (temp ^ (uint16_t) a_) & ((temp & value) & 0x0080));
     setFlags(N, temp & 0x0080);
+    a_ = temp & 0x00FF;
+    return 1;
 }
 
 uint8_t Cpu6502::CMP() { //Compare accumulator
