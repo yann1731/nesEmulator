@@ -4,8 +4,8 @@
 #include <setjmp.h>
 #include <sys/types.h>
 
-Cpu6502::Cpu6502(): bus(nullptr), status(0x00), PC(0x0000), SP(0x00),
-    A(0x00), X(0x00), Y(0x00), fetched(0x00), addrAbs(0x0000),
+Cpu6502::Cpu6502(): bus(nullptr), status(0x00), pc_(0x0000), sp_(0x00),
+    a_(0x00), x_(0x00), y_(0x00), fetched(0x00), addrAbs(0x0000),
      addrRel(0x0000), opCode(0x00), cycles(0)
 {
     using a = Cpu6502;
@@ -32,8 +32,8 @@ Cpu6502::Cpu6502(): bus(nullptr), status(0x00), PC(0x0000), SP(0x00),
 
 void Cpu6502::clock() {
     if (cycles == 0) {
-        opCode = read(PC);
-        PC++;
+        opCode = read(pc_);
+        pc_++;
 
         cycles = lookup[opCode].cycles;
 
@@ -366,39 +366,81 @@ uint8_t Cpu6502::SBC() { //Subtract with carry
 }
 
 uint8_t Cpu6502::CMP() { //Compare accumulator
-    
+    fetch();
+
+    uint16_t temp = a_ - (uint16_t) fetched;
+    setFlags(C, a_ >= (uint16_t) fetched);
+    setFlags(Z, a_ == (uint16_t) fetched); //may need to revisit this
+    setFlags(N, temp & 0x0080);
+    return 1;
 }
 
 uint8_t Cpu6502::CPX() { //Compare X register
-    
+    fetch();
+
+    uint16_t temp = x_ - (uint16_t) fetched;
+    setFlags(C, x_ >= (uint16_t) fetched);
+    setFlags(Z, x_ == (uint16_t) fetched);
+    setFlags(N, temp & 0x0080);
+    return 1;
 }
 
 uint8_t Cpu6502::CPY() { //Compare Y register
-    
+    fetch();
+
+    uint16_t temp = y_ - (uint16_t) fetched;
+    setFlags(C, y_ >= (uint16_t) fetched);
+    setFlags(Z, y_ == (uint16_t) fetched);
+    setFlags(N, temp & 0x0080);
+    return 1;
 }
 
 uint8_t Cpu6502::INC() { //Increment a memory location
-    
+    fetch();
+
+    fetched++;
+    setFlags(Z, fetched == 0x00);
+    setFlags(N, fetched & 0x80);
+    write(addrAbs, fetched);
+    return 0;
 }
 
 uint8_t Cpu6502::INX() { //Increment the X register
-    
+    x_++;
+    setFlags(Z, x_ == 0x00);
+    setFlags(N, x_ & 0x80);
+    return 0;
 }
 
 uint8_t Cpu6502::INY() { //Increment the Y register
-    
+    y_++;
+    setFlags(Z, y_ == 0x00);
+    setFlags(N, y_ & 0x80);
+    return 0;
 }
 
 uint8_t Cpu6502::DEC() { //Decrement a memory location
-    
+    fetch();
+
+    fetched--; //might need to revisit
+    setFlags(Z, fetched == 0x00);
+    setFlags(N, fetched & 0x80);
+    write(addrAbs, fetched);
+    return 0;
 }
 
 uint8_t Cpu6502::DEX() { //Decrement the X register
-    
+    x_--;
+    setFlags(Z, x_ == 0x00);
+    setFlags(N, x_ & 0x80);
+    return 0;
 }
 
 uint8_t Cpu6502::DEY() { //Decrement the Y register
-    
+    y_--;
+    setFlags(Z, y_ == 0x00);
+    setFlags(N, y_ & 0x80);
+    return 0;
 }
 
 uint8_t Cpu6502::ASL() { //Arithmetic shift left
