@@ -443,30 +443,93 @@ uint8_t Cpu6502::DEY() { //Decrement the Y register
     return 0;
 }
 
+//A,Z,C,N = M*2 or M,Z,C,N = M*2
 uint8_t Cpu6502::ASL() { //Arithmetic shift left
-    
+    fetch();
+
+    uint16_t temp = (uint16_t) fetched << 1;
+    setFlags(Z, (temp & 0x00FF) == 0x00);
+    setFlags(C, (temp & 0xFF00) > 0);
+    setFlags(N, temp & 0x80);
+    if (lookup[opCode].addrmode == &Cpu6502::IMP) {
+        a_ = temp & 0x00FF;
+    }
+    else {
+        write(addrAbs, temp & 0x00FF);
+    }
+    return 0;
 }
 
+// A,C,Z,N = A/2 or M,C,Z,N = M/2
+// Each of the bits in A or M is shift one place to the right. The bit that was in bit 0 is shifted into the carry flag. Bit 7 is set to zero.
 uint8_t Cpu6502::LSR() { //Logical shift right
-    
+    fetch();
+
+    setFlags(C, fetched & 0x0001);
+    uint16_t temp = fetched >> 1;
+    setFlags(Z, (temp & 0x00FF) == 0x0000);
+    setFlags(N, temp & 0x0080);
+    if (lookup[opCode].addrmode == &Cpu6502::IMP) {
+        a_ = temp & 0x00FF;
+    }
+    else {
+        write(addrAbs, temp & 0x00FF);
+    }
+    return 0;
 }
 
+//Move each of the bits in either A or M one place to the left. Bit 0 is filled with the current value of the carry flag whilst the old bit 7 becomes the new carry flag value
 uint8_t Cpu6502::ROL() { //Rotate left
-    
+    fetch();
+
+    uint16_t temp = (uint16_t) (fetched << 1) | getFlags(C);
+    setFlags(C, temp & 0xFF00);
+    setFlags(Z, (temp & 0x00FF) == 0x0000);
+    setFlags(N, temp & 0x0080);
+    if (lookup[opCode].addrmode == &Cpu6502::IMP) {
+        a_ = temp & 0x00FF;
+    } else {
+        write(addrAbs, temp & 0x00FF);
+    }
+    return 0;
 }
 
+//Move each of the bits in either A or M one place to the right. Bit 7 is filled with the current value of the carry flag whilst the old bit 0 becomes the new carry flag value.
 uint8_t Cpu6502::ROR() { //Rotate right
-    
+    fetch();
+
+    uint16_t temp = (uint16_t) (getFlags(C) << 7) | (fetched >> 1);
+    setFlags(C, fetched & 0x01);
+    setFlags(Z, (temp & 0x00FF) == 0x0000);
+    setFlags(N, temp & 0x0080);
+    if (lookup[opCode].addrmode == &Cpu6502::IMP) {
+        a_ = temp & 0x00FF;
+    } else {
+        write(addrAbs, temp & 0x00FF);
+    }
+    return 0;
 }
 
+//Sets the program counter to the address specified by the operand
 uint8_t Cpu6502::JMP() { //Jump to another location
-    
+    pc_ = addrAbs;
+    return 0;
 }
 
+//The JSR instruction pushes the address (minus one) of the return point on to the stack and then sets the program counter to the target memory address
 uint8_t Cpu6502::JSR() { //Jump to a subroutine
-    
+    pc_--;
+
+    write(0x0100 + sp_, (pc_ >> 8) & 0x00FF);
+    sp_--;
+    write(0x0100 + sp_, pc_ & 0x00FF);
+    sp_--;
+
+    pc_ = addrAbs;
+    return 0;
 }
 
+//The RTS instruction is used at the end of a subroutine to return to the calling routine. It pulls the program counter (minus one) from the stack
 uint8_t Cpu6502::RTS() { //Return from subroutine
     
 }
