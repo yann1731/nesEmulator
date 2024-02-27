@@ -531,7 +531,13 @@ uint8_t Cpu6502::JSR() { //Jump to a subroutine
 
 //The RTS instruction is used at the end of a subroutine to return to the calling routine. It pulls the program counter (minus one) from the stack
 uint8_t Cpu6502::RTS() { //Return from subroutine
-    
+    sp_++;
+    pc_ = (uint16_t) read(0x0100 + sp_);
+    sp_++;
+    pc_ |= (uint16_t) read(0x0100 + sp_) << 8;
+
+    pc_++;
+    return 0;
 }
 
 uint8_t Cpu6502::BCC() {
@@ -666,14 +672,32 @@ uint8_t Cpu6502::SEI() {
 }
 
 uint8_t Cpu6502::BRK() {
-    
+    pc_++;
+    setFlags(I, 1);
+    write(0x0100 + sp_, (pc_ >> 8) & 0x00FF);
+    sp_--;
+    write(0x0100 + sp_, pc_ & 0x00FF);
+    sp_--;
+    setFlags(B, 1);
+    write(0x0100 + sp_, status);
+    sp_--;
+    setFlags(B, 0);
+
+    pc_ = (uint16_t) read(0xFFFE) | (uint16_t) (read(0xFFFF) << 8);
+    return 0;
 }
 
 uint8_t Cpu6502::NOP() {
-    
+    return 0;
 }
 
 uint8_t Cpu6502::RTI() {
+    sp_++;
+
+    status = read(0x0100 + sp_);
+    status &= ~B;
+    status &= ~U;
+
     
 }
 
