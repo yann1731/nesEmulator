@@ -767,7 +767,13 @@ uint8_t Cpu6502::RTI() {
     status &= ~B;
     status &= ~U;
 
-    
+    sp_++;
+
+    pc_ = (uint16_t) read(0x0100 + sp_);
+    sp_++;
+    pc_ |= (uint16_t) read(0x0100 + sp_) << 8;
+
+    return 0;
 }
 
 uint8_t Cpu6502::XXX() {
