@@ -800,7 +800,20 @@ void Cpu6502::reset() {
 }
 
 void Cpu6502::irq() {
-    
+    if (getFlags(I) == 0) {
+        write(0x0100 + sp_, (pc_ >> 8) & 0x00FF);
+        sp_--;
+        write(0x0100 + sp_, pc_ & 0x00FF);
+        sp_--;
+
+        setFlags(B, 0);
+        setFlags(U, 1);
+        setFlags(I, 1);
+        write(0x0100 + sp_, status);
+        sp_--;
+
+        
+    }
 }
 
 void Cpu6502::nmi() {
