@@ -812,10 +812,29 @@ void Cpu6502::irq() {
         write(0x0100 + sp_, status);
         sp_--;
 
-        
+        addrAbs = 0xFFFE;
+        uint16_t lo = read(addrAbs + 0);
+        uint16_t hi = read(addrAbs + 1);
+        pc_ = (hi << 8) | lo;
+        cycles = 7;        
     }
 }
 
 void Cpu6502::nmi() {
+    write(0x0100 + sp_, (pc_ >> 8) & 0x00FF);
+    sp_--;
+    write(0x0100 + sp_, pc_ & 0x00FF);
+    sp_--;
 
+    setFlags(B, 0);
+    setFlags(U, 1);
+    setFlags(I, 1);
+    write(0x0100 + sp_, status);
+    sp_--;
+
+    addrAbs = 0xFFFA;
+    uint16_t lo = read(addrAbs + 0);
+    uint16_t hi = read(addrAbs + 1);
+    pc_ = (hi << 8) | lo;
+    cycles = 8;
 }
