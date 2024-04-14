@@ -777,15 +777,30 @@ uint8_t Cpu6502::RTI() {
 }
 
 uint8_t Cpu6502::XXX() {
-    
+    return 0;
 }
 
 void Cpu6502::reset() {
+    addrAbs = 0xFFFC;
 
+    uint16_t lo = read(addrAbs + 0);
+    uint16_t hi = read(addrAbs + 1);
+
+    pc_ = (hi << 8) | lo;
+    a_ = 0x00;
+    y_ = 0x00;
+    x_ = 0x00;
+    sp_ = 0xFD;
+    status = 0x00 | U;
+    addrRel = 0x0000;
+    addrAbs = 0x0000;
+    fetched = 0x00;
+
+    cycles = 8;
 }
 
 void Cpu6502::irq() {
-
+    
 }
 
 void Cpu6502::nmi() {
