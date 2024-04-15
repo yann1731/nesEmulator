@@ -71,6 +71,7 @@ License (OLC-3)
 #pragma once
 #include "header.hpp"
 #include "Instruction.hpp"
+#include <map>
 
 class Bus;
 class Cpu6502 {
@@ -193,6 +194,7 @@ public:
     void reset();
     void irq();
     void nmi();
+    std::map<uint16_t, std::string> disassemble(uint16_t start, uint16_t stop);
 
     uint8_t fetch();
     uint8_t fetched;

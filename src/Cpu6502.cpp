@@ -838,3 +838,14 @@ void Cpu6502::nmi() {
     pc_ = (hi << 8) | lo;
     cycles = 8;
 }
+
+std::map<uint16_t, std::string> Cpu6502::disassemble(uint16_t nStart, uint16_t nStop) {
+    uint32_t addr = nStart;
+    uint8_t value = 0x00;
+    uint8_t lo = 0x00;
+    uint8_t hi = 0x00;
+    std::map<uint16_t, std::string> mapLines;
+    uint16_t lineAddr = 0;
+
+    
+}
