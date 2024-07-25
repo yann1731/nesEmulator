@@ -16,10 +16,25 @@ uint8_t Bus::cpuRead(uint16_t addr, bool readOnly) {
     if (addr >= 0x0000 && addr <= 0x1fff)
         data = cpuRam[addr & 0x07ff];
     else if (addr >= 0x2000 && addr <= 0x3fff)
+        data = ppu.cpuRead(addr & 0x0007, readOnly);
     return data;
 }
 
 void Bus::cpuWrite(uint16_t addr, uint8_t data) {
     if (addr >= 0x0000 && addr <= 0x1fff)
         cpuRam[addr & 0x07ff] = data;
+    else if (addr >= 0x2000 && addr <= 0x3fff)
+        ppu.cpuWrite(addr & 0x0007, data);
+}
+
+void Bus::insertCartridge(const std::shared_ptr<Cartridge> &cart) {
+
+}
+
+void Bus::reset() {
+
+}
+
+void Bus::clock() {
+    
 }
