@@ -1,7 +1,9 @@
-#pragma once
-#include "header.hpp"
-#include "Cpu6502.hpp"
-#include "Ppu2c02.hpp"
+#ifndef BUS_HPP
+# define BUS_HPP
+
+# include "header.hpp"
+# include "Cpu6502.hpp"
+# include "Ppu2c02.hpp"
 
 class Bus {
 public:
@@ -18,3 +20,5 @@ public:
 private:
     std::array<uint8_t, 2048> cpuRam;
 };
+
+#endif

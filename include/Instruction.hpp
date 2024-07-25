@@ -1,5 +1,6 @@
-#pragma once
-#include "header.hpp"
+#ifndef INSTRUCTION_HPP
+# define INSTRUCTION_HPP
+# include "header.hpp"
 
 class Cpu6502;
 struct INSTRUCTION {
@@ -8,3 +9,5 @@ struct INSTRUCTION {
     uint8_t(Cpu6502::*addrmode)(void);
     uint8_t cycles;
 };
+
+#endif

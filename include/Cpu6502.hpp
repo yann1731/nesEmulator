@@ -68,10 +68,12 @@ License (OLC-3)
 	David Barr, aka javidx9, ©OneLoneCoder 2019
 */
 
-#pragma once
-#include "header.hpp"
-#include "Instruction.hpp"
-#include <map>
+#ifndef CPU6502_HPP
+# define CPU6502_HPP
+
+# include "header.hpp"
+# include "Instruction.hpp"
+# include <map>
 
 class Bus;
 class Cpu6502 {
@@ -223,3 +225,5 @@ private:
 
     std::vector<INSTRUCTION> lookup;
 };
+
+#endif
