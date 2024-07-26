@@ -199,18 +199,18 @@ public:
     std::map<uint16_t, std::string> disassemble(uint16_t start, uint16_t stop);
 
     uint8_t fetch();
-    uint8_t fetched;
+    uint8_t fetched_;
 
-    uint16_t addrAbs;
-    uint16_t addrRel;
-    uint8_t opCode;
+    uint16_t addrAbs_;
+    uint16_t addrRel_;
+    uint8_t opCode_;
 
-    int cycles;
+    int cycles_;
 
 private:
-    Bus         *bus;
+    Bus         *bus_;
 
-    uint8_t     status; //processor status
+    uint8_t     status_; //processor status
     uint16_t    pc_; //program counter
     uint8_t     sp_; //stack pointer
     uint8_t     a_; //accumulator
@@ -223,7 +223,7 @@ private:
     uint8_t getFlags(CPUStatusFlags f);
     void setFlags(CPUStatusFlags f, bool v);
 
-    std::vector<INSTRUCTION> lookup;
+    std::vector<INSTRUCTION> lookup_;
 };
 
 #endif

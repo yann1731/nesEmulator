@@ -1,7 +1,10 @@
 #ifndef PPU2C02_HPP
 # define PPU2C02_HPP
 
+#include <_types/_uint8_t.h>
 # include <cstdint>
+# include <memory>
+# include "Cartridge.hpp"
 
 class Ppu2c02 {
 public:
@@ -13,6 +16,13 @@ public:
 
 	uint8_t ppuRead(uint16_t addr, bool readOnly = false);
 	void ppuWrite(uint16_t addr, uint8_t data);
+
+	void connectCartridge(const std::shared_ptr<Cartridge>& cart);
+	void clock();
+private:
+	std::shared_ptr<Cartridge> cart_;
+	uint8_t tbl_name_[2][1024];
+	uint8_t tbl_palette_[32];
 };
 
 #endif

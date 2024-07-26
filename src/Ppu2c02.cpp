@@ -60,3 +60,7 @@ uint8_t Ppu2c02::ppuRead(uint16_t addr, bool readOnly) {
 void Ppu2c02::ppuWrite(uint16_t addr, uint8_t data) {
 	addr &= 0x3fff;
 }
+
+void Ppu2c02::connectCartridge(const std::shared_ptr<Cartridge> &cart) {
+	this->cart_ = cart;
+}

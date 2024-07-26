@@ -1,11 +1,11 @@
 #include "../include/Bus.hpp"
 #include <cstdint>
 
-Bus::Bus() {
-    for (uint8_t i : cpuRam)
-        cpuRam[i] = 0x00;
+Bus::Bus(): n_system_clock_counter_(0) {
+    for (uint8_t i : cpu_ram_)
+        cpu_ram_[i] = 0x00;
 
-    cpu.connectBus(this);
+    cpu_.connectBus(this);
 }
 
 Bus::~Bus() { }
@@ -14,27 +14,28 @@ uint8_t Bus::cpuRead(uint16_t addr, bool readOnly) {
     uint8_t data = 0x00;
 
     if (addr >= 0x0000 && addr <= 0x1fff)
-        data = cpuRam[addr & 0x07ff];
+        data = cpu_ram_[addr & 0x07ff];
     else if (addr >= 0x2000 && addr <= 0x3fff)
-        data = ppu.cpuRead(addr & 0x0007, readOnly);
+        data = ppu_.cpuRead(addr & 0x0007, readOnly);
     return data;
 }
 
 void Bus::cpuWrite(uint16_t addr, uint8_t data) {
     if (addr >= 0x0000 && addr <= 0x1fff)
-        cpuRam[addr & 0x07ff] = data;
+        cpu_ram_[addr & 0x07ff] = data;
     else if (addr >= 0x2000 && addr <= 0x3fff)
-        ppu.cpuWrite(addr & 0x0007, data);
+        ppu_.cpuWrite(addr & 0x0007, data);
 }
 
 void Bus::insertCartridge(const std::shared_ptr<Cartridge> &cart) {
-
+    cart_ = cart;
+    ppu_.connectCartridge(cart);
 }
 
 void Bus::reset() {
-
+    cpu_.reset();
 }
 
 void Bus::clock() {
-    
+
 }
