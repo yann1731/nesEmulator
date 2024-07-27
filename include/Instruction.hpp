@@ -1,6 +1,7 @@
 #ifndef INSTRUCTION_HPP
 # define INSTRUCTION_HPP
-# include "header.hpp"
+# include <cstdint>
+# include <string>
 
 class Cpu6502;
 struct INSTRUCTION {

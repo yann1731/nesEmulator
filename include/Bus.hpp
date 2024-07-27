@@ -2,7 +2,6 @@
 # define BUS_HPP
 
 #include "Cartridge.hpp"
-# include "header.hpp"
 # include "Cpu6502.hpp"
 # include "Ppu2c02.hpp"
 # include <memory>
