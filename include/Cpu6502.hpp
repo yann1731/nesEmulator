@@ -200,17 +200,14 @@ public:
     std::map<uint16_t, std::string> disassemble(uint16_t start, uint16_t stop);
 
     uint8_t fetch();
-    uint8_t fetched_;
-
-    uint16_t addrAbs_;
-    uint16_t addrRel_;
-    uint8_t opCode_;
-
-    int cycles_;
 
 private:
     Bus         *bus_;
-
+    uint8_t fetched_;
+    uint16_t addr_abs_;
+    uint16_t addr_rel_;
+    uint8_t op_code_;
+    int cycles_;
     uint8_t     status_; //processor status
     uint16_t    pc_; //program counter
     uint8_t     sp_; //stack pointer
