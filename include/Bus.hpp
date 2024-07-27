@@ -5,7 +5,6 @@
 # include "header.hpp"
 # include "Cpu6502.hpp"
 # include "Ppu2c02.hpp"
-#include <_types/_uint32_t.h>
 # include <memory>
 
 class Bus {

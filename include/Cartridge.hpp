@@ -1,7 +1,6 @@
 #ifndef CARTRIDGE_HPP
 # define CARTRIDGE_HPP
 
-#include <_types/_uint8_t.h>
 # include <cstdint>
 # include <vector>
 class Cartridge {

@@ -1,7 +1,6 @@
 #ifndef PPU2C02_HPP
 # define PPU2C02_HPP
 
-#include <_types/_uint8_t.h>
 # include <cstdint>
 # include <memory>
 # include "Cartridge.hpp"
