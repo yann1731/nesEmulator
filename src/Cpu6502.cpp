@@ -70,9 +70,7 @@ License (OLC-3)
 
 #include "../include/Cpu6502.hpp"
 #include "../include/Bus.hpp"
-// #include <_types/_uint16_t.h>
 #include <cstdint>
-#include <sys/types.h>
 
 Cpu6502::Cpu6502(): bus_(nullptr), status_(0x00), pc_(0x0000), sp_(0x00),
     a_(0x00), x_(0x00), y_(0x00), fetched_(0x00), addr_abs_(0x0000),

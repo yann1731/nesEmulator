@@ -3,8 +3,13 @@
 
 # include <cstdint>
 # include <vector>
+# include <string>
+
 class Cartridge {
 public:
+	Cartridge(const std::string& cartName);
+	~Cartridge();
+
 	bool cpuRead(uint16_t addr, uint8_t data);
 	bool cpuWrite(uint16_t addr, uint8_t &data);
 
