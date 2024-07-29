@@ -1,13 +1,22 @@
 #include "../include/Cartridge.hpp"
 #include "../include/InesHeader.hpp"
+#include <ios>
 
-Cartridge::Cartridge(const std::string& cartName): v_prg_mem_(0), v_chr_mem_(0) {
+Cartridge::Cartridge(const std::string& cartName): v_prg_mem_(0),
+v_chr_mem_(0),
+n_mapper_id_(0),
+n_prg_banks_(0),
+n_chr_banks(0) {
 	memset(&header, 0, sizeof(header));
 
 	std::ifstream file;
 	file.open(cartName, std::ifstream::binary);
 	if (file.is_open()) {
 		file.read((char*) &header, sizeof(header));
+
+		if (header.mapper1 & 0x04)
+			file.seekg(512, std::ios_base::cur);
+		n_mapper_id_ = ((header.mapper2 >> 4) << 4) | (header.mapper1 >> 4);
 	}
 	else {
 		std::cerr << "Error opening file" << std::endl;

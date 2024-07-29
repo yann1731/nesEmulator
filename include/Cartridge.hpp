@@ -22,7 +22,12 @@ public:
 private:
 	std::vector<uint8_t> v_prg_mem_;
 	std::vector<uint8_t> v_chr_mem_;
+	
 	InesHeader header;
+
+	uint8_t n_mapper_id_;
+	uint8_t n_prg_banks_;
+	uint8_t n_chr_banks;
 };
 
 #endif
