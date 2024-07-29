@@ -4,6 +4,10 @@
 # include <cstdint>
 # include <vector>
 # include <string>
+# include "InesHeader.hpp"
+# include <cstring>
+# include <fstream>
+# include <iostream>
 
 class Cartridge {
 public:
@@ -18,6 +22,7 @@ public:
 private:
 	std::vector<uint8_t> v_prg_mem_;
 	std::vector<uint8_t> v_chr_mem_;
+	InesHeader header;
 };
 
 #endif
