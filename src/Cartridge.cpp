@@ -1,5 +1,6 @@
 #include "../include/Cartridge.hpp"
 #include "../include/InesHeader.hpp"
+#include <cstdint>
 #include <ios>
 
 Cartridge::Cartridge(const std::string& cartName): v_prg_mem_(0),
@@ -17,6 +18,9 @@ n_chr_banks(0) {
 		if (header.mapper1 & 0x04)
 			file.seekg(512, std::ios_base::cur);
 		n_mapper_id_ = ((header.mapper2 >> 4) << 4) | (header.mapper1 >> 4);
+
+		uint8_t n_file_type = 1;
+		
 	}
 	else {
 		std::cerr << "Error opening file" << std::endl;
