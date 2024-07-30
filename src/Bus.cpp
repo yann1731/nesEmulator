@@ -1,5 +1,4 @@
 #include "../include/Bus.hpp"
-#include <cstdint>
 
 Bus::Bus(): n_system_clock_counter_(0) {
     for (uint8_t i : cpu_ram_)
@@ -13,7 +12,10 @@ Bus::~Bus() { }
 uint8_t Bus::cpuRead(uint16_t addr, bool readOnly) {
     uint8_t data = 0x00;
 
-    if (addr >= 0x0000 && addr <= 0x1fff)
+    if (cart_->cpuRead(addr, data)) {
+
+    }
+    else if (addr >= 0x0000 && addr <= 0x1fff)
         data = cpu_ram_[addr & 0x07ff];
     else if (addr >= 0x2000 && addr <= 0x3fff)
         data = ppu_.cpuRead(addr & 0x0007, readOnly);
@@ -21,7 +23,10 @@ uint8_t Bus::cpuRead(uint16_t addr, bool readOnly) {
 }
 
 void Bus::cpuWrite(uint16_t addr, uint8_t data) {
-    if (addr >= 0x0000 && addr <= 0x1fff)
+    if (cart_->cpuWrite(addr, data)) {
+
+    }
+    else if (addr >= 0x0000 && addr <= 0x1fff)
         cpu_ram_[addr & 0x07ff] = data;
     else if (addr >= 0x2000 && addr <= 0x3fff)
         ppu_.cpuWrite(addr & 0x0007, data);

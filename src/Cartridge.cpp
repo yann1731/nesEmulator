@@ -1,7 +1,5 @@
 #include "../include/Cartridge.hpp"
 #include "../include/InesHeader.hpp"
-#include <cstdint>
-#include <ios>
 
 Cartridge::Cartridge(const std::string& cartName): v_prg_mem_(0),
 v_chr_mem_(0),
@@ -20,7 +18,25 @@ n_chr_banks(0) {
 		n_mapper_id_ = ((header.mapper2 >> 4) << 4) | (header.mapper1 >> 4);
 
 		uint8_t n_file_type = 1;
-		
+		if (n_file_type == 0) {
+
+		}
+
+		if (n_file_type == 1) {
+			n_prg_banks_ = header.prg_rom_chunks;
+			v_prg_mem_.resize(n_prg_banks_ * 16384);
+			file.read((char *)v_prg_mem_.data(), v_prg_mem_.size());
+
+			n_chr_banks = header.chr_rom_chunks;
+			v_chr_mem_.resize(n_chr_banks * 8192);
+			file.read((char *)v_chr_mem_.data(), v_chr_mem_.size());
+		}
+
+		if (n_file_type == 2) {
+
+		}
+
+		file.close();
 	}
 	else {
 		std::cerr << "Error opening file" << std::endl;

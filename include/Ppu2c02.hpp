@@ -3,6 +3,11 @@
 
 # include <cstdint>
 # include <memory>
+#ifdef __APPLE__
+# include <_types/_uint8_t.h>
+#else
+# include <sys/types.h>
+#endif
 # include "Cartridge.hpp"
 
 class Ppu2c02 {
