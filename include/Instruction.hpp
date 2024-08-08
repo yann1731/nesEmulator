@@ -1,5 +1,6 @@
 #ifndef INSTRUCTION_HPP
 # define INSTRUCTION_HPP
+
 # include <cstdint>
 # include <string>
 

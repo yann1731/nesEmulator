@@ -2,12 +2,15 @@
 # define CARTRIDGE_HPP
 
 # include <cstdint>
+# include <memory>
 # include <vector>
 # include <string>
-# include "InesHeader.hpp"
 # include <cstring>
 # include <fstream>
 # include <iostream>
+
+# include "Mapper000.hpp"
+# include "InesHeader.hpp"
 
 class Cartridge {
 public:
@@ -28,6 +31,8 @@ private:
 	uint8_t n_mapper_id_;
 	uint8_t n_prg_banks_;
 	uint8_t n_chr_banks;
+
+	std::shared_ptr<Mapper> mapper_;
 };
 
 #endif

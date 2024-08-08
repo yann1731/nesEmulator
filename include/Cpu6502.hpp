@@ -71,10 +71,11 @@ License (OLC-3)
 #ifndef CPU6502_HPP
 # define CPU6502_HPP
 
-# include "Instruction.hpp"
 # include <cstdint>
 # include <map>
 # include <vector>
+
+# include "Instruction.hpp"
 
 class Bus;
 class Cpu6502 {

@@ -1,7 +1,8 @@
 #ifndef MAPPER_HPP
 #define MAPPER_HPP
 
-#include <cstdint>
+# include <cstdint>
+
 class Mapper {
 public:
     Mapper(uint8_t prg_banks, uint8_t chr_banks);

@@ -1,11 +1,12 @@
 #ifndef BUS_HPP
 # define BUS_HPP
 
+# include <memory>
+# include <array>
+
 # include "Cartridge.hpp"
 # include "Cpu6502.hpp"
 # include "Ppu2c02.hpp"
-# include <memory>
-# include <array>
 
 class Bus {
 public:

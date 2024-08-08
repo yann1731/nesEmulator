@@ -8,6 +8,7 @@
 #else
 # include <sys/types.h>
 #endif
+
 # include "Cartridge.hpp"
 
 class Ppu2c02 {
